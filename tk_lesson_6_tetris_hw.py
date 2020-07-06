@@ -58,9 +58,14 @@ class Figure:
             self.show_cell(cx, cy)
 
     def check(self, p):
-        px, py = p
+        px, py  = p
         for x, y in self.cells:
             if y+py >= CELLS_Y:
+                return False
+            # HW:
+            if x + px >= CELLS_X:
+                return False
+            if x + py < 0:
                 return False
         return True
 
@@ -69,6 +74,16 @@ class Figure:
         if not self.check(p_new):
             return False
 
+        self.hide()
+        self.p = p_new
+        self.show()
+        return True
+
+    # HW:
+    def shift(self, d):
+        p_new = (self.p[0] + d, self.p[1])
+        if not self.check(p_new):
+            return False
         self.hide()
         self.p = p_new
         self.show()
@@ -92,6 +107,13 @@ board = Board(c)
 figure = Figure(c)
 
 
+def on_key(event):
+    if event.keysym == 'Left':
+        figure.shift(-1)
+    if event.keysym == 'Right':
+        figure.shift(1)
+
+
 def on_time():
     figure.down()
 
@@ -108,6 +130,7 @@ def on_close():
 
 def main():
     window.protocol("WM_DELETE_WINDOW", on_close)
+    window.bind('<Key>', on_key)
 
     board.draw()
     figure.show()

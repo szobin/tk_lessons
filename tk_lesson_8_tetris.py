@@ -1,6 +1,9 @@
-# - keep board cells in class
-# - check cell crossing and stop move
-# home task: - add figure 3 and 4
+# lesson #8
+# tetris #3
+
+# - board: copy_figure, in_cells
+# - figure: shift, rotate, respawn
+# home task: - add figure 3, 4, 5, 6, 7
 
 import tkinter as tk
 import sched as sd

@@ -8,7 +8,9 @@ import time
 import random
 import tkinter as tk
 
-root = tk.Tk()
+window = tk.Tk()
+window.title("Snake")
+
 s = sched.scheduler(time.time, time.sleep)
 
 MX = MY = 10
@@ -32,7 +34,7 @@ snake = []
 food = []
 snake_len = INI_SNAKE_LEN
 
-canvas = tk.Canvas(root, width=W, height=H, bg='white')
+canvas = tk.Canvas(window, width=W, height=H, bg='white')
 canvas.pack()
 
 restart_var = tk.IntVar()
@@ -76,7 +78,7 @@ def show_game_over():
                        text="Game over!", anchor="center", fill="red")
 
     restart_var.set(0)
-    restart_button = tk.Button(root, text="Restart", fg="red",
+    restart_button = tk.Button(window, text="Restart", fg="red",
                                width=12, height=1,
                                command=lambda: restart_var.set(1))
     restart_button.place(relx=0.5, rely=0.5, anchor="c")
@@ -183,7 +185,7 @@ def move():
         x0, y0 = snake[0]
         hide_head(x0, y0)
 
-    root.update()
+    window.update()
     if not stop:
         s.enter(0.2, 1, move)
     return
@@ -210,19 +212,20 @@ def onkey(event):
 def on_closing():
     global stop
     if stop:
-        root.quit()
+        window.quit()
     stop = True
     restart_var.set(1)
 
 
 def main():
+    window.bind('<Key>', onkey)
+    window.protocol("WM_DELETE_WINDOW", on_closing)
+
     add_random_food()
     draw_board()
     draw_pane()
     draw_food()
     draw_snake()
-    root.bind('<Key>', onkey)
-    root.protocol("WM_DELETE_WINDOW", on_closing)
 
     s.enter(0.2, 1, move)
     s.run()

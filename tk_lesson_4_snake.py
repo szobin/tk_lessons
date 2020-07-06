@@ -8,7 +8,8 @@ import time
 import random
 import tkinter as tk
 
-root = tk.Tk()
+window = tk.Tk()
+window.title("Snake")
 s = sched.scheduler(time.time, time.sleep)
 
 BOARD_X = BOARD_Y = 10
@@ -26,7 +27,7 @@ stop = False
 snake = []
 food = []
 
-canvas = tk.Canvas(root, width=CELLS_X*wx+2*BOARD_X, height=CELLS_Y*wy+2*BOARD_Y+SCORE_HEIGHT, bg='white')
+canvas = tk.Canvas(window, width=CELLS_X*wx+2*BOARD_X, height=CELLS_Y*wy+2*BOARD_Y+SCORE_HEIGHT, bg='white')
 canvas.pack()
 
 
@@ -133,7 +134,7 @@ def move():
         x0, y0 = snake[0]
         hide_head(x0, y0)
 
-    root.update()
+    window.update()
     if not stop:
         s.enter(0.2, 1, move)
     return
@@ -160,18 +161,19 @@ def onkey(event):
 def on_closing():
     global stop
     if stop:
-        root.quit()
+        window.quit()
     stop = True
 
 
 def main():
+    window.bind('<Key>', onkey)
+    window.protocol("WM_DELETE_WINDOW", on_closing)
+
     add_random_food()
     draw_board()
     draw_pane()
     draw_food()
     draw_snake()
-    root.bind('<Key>', onkey)
-    root.protocol("WM_DELETE_WINDOW", on_closing)
 
     s.enter(0.2, 1, move)
     s.run()

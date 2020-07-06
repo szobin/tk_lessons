@@ -1,48 +1,48 @@
 # lesson 2: snake game:
 #   - board
 #   - snake head and body
-#   - how to use arrows
+#   - how to use arrow keys
 import tkinter as tk
 
+W = H = 500
+CW = CH = 20
+
 window = tk.Tk()
+window.title("Snake")
 
-WIDTH = HEIGHT = 500
-x = y = WIDTH // 2
-wx = wy = 20
+x = y = W // 2
 
-canvas = tk.Canvas(window, width=WIDTH, height=HEIGHT, bg='white')
+canvas = tk.Canvas(window, width=W, height=H, bg='white')
 canvas.pack()
 
 
-def draw_rect():
-    canvas.create_rectangle(x, y, x + wx, y + wy, fill="green")
+def draw_head():
+    canvas.create_rectangle(x, y, x + CW, y + CH, fill="green", tag="head")
 
 
-def hide_rect():
-    canvas.create_rectangle(x, y, x + wx, y + wy, fill="white")
+def hide_head():
+    canvas.delete("head")
 
 
-def move(event):
-    if event.keysym == 'Escape':
-        window.quit()
-        return
-
+def on_key(event):
     global x, y
-    hide_rect()
+    hide_head()
+
     if event.keysym == 'Up':
-        y = y - wy if y-wy > 0 else y - 2*wy + HEIGHT
+        y = y - CH if y-CH > 0 else y - 2*CH + H
     elif event.keysym == 'Down':
-        y = (y + wy) % (HEIGHT - wy)
+        y = (y + CH) % (H - CH)
     elif event.keysym == 'Left':
-        x = x - wx if x - wx > 0 else x - 2*wx + WIDTH
+        x = x - CW if x - CW > 0 else x - 2*CW + W
     elif event.keysym == 'Right':
-        x = (x + wx) % (WIDTH - wx)
-    draw_rect()
+        x = (x + CW) % (W - CH)
+    draw_head()
 
 
 def main():
-    draw_rect()
-    window.bind('<Key>', move)
+    window.bind('<Key>', on_key)
+
+    draw_head()
     window.mainloop()
 
 

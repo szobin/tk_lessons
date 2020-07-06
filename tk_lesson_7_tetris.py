@@ -1,6 +1,7 @@
-# - rotate figure
-# - select figure type
-# home task: - select figure random color
+# lesson #7
+# tetris #2
+# figure.rotate
+# home task: - select figure random color, random figure init pos
 
 
 import tkinter as tk
@@ -16,16 +17,13 @@ BLOCK_2 = [(0, 0), (0, 1), (0, 2), (1, 2)]
 BLOCK_TYPES = [BLOCK_1, BLOCK_2]
 
 # margins
-MX = 10
-MY = 10
+MX = MY = 10
 
 # padding
-PX = 4
-PY = 4
+PX = PY = 4
 
 # cells
-CW = 20
-CH = 20
+CW = CH = 20
 
 CELLS_X = 12
 CELLS_Y = 30
@@ -171,12 +169,11 @@ def move():
 
 
 def main():
-    draw_board()
-    new_figure()
     root.bind('<Key>', on_key)
     root.protocol("WM_DELETE_WINDOW", on_close)
 
-    # f.down()
+    draw_board()
+    new_figure()
 
     s.enter(TIME_VEL, 1, move)
     s.run()

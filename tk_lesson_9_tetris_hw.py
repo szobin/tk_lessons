@@ -14,7 +14,10 @@ BLOCK_1 = [(0, 0), (0, 1), (0, 2), (0, 3)]
 BLOCK_2 = [(0, 0), (0, 1), (0, 2), (1, 2)]
 BLOCK_3 = [(0, 0), (0, 1), (1, 1), (1, 0)]
 BLOCK_4 = [(0, 0), (1, 0), (2, 0), (2, 1)]
-BLOCK_TYPES = [BLOCK_1, BLOCK_2, BLOCK_3, BLOCK_4]
+
+# HW:
+BLOCK_TYPES = [(BLOCK_1, 'blue'),  (BLOCK_2, 'green'),
+               (BLOCK_3, 'fuchsia'), (BLOCK_4, 'maroon')]
 
 # margins
 MX = MY = 10
@@ -100,8 +103,8 @@ class Figure:
         self.respawn()
 
     def respawn(self):
-        self.color = random.choice(BLOCK_COLORS)
-        self.cells = random.choice(BLOCK_TYPES)
+        # HW:
+        self.cells, self. color = random.choice(BLOCK_TYPES)
         px = random.randint(1, CELLS_X - 2)
         self.p = (px, 0)
         return self.check(self.p)

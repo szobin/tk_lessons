@@ -7,6 +7,8 @@ import time
 import tkinter as tk
 
 window = tk.Tk()
+window.title("Snake")
+
 s = sched.scheduler(time.time, time.sleep)
 
 BOARD_X = BOARD_Y = 5
@@ -50,7 +52,7 @@ def draw_snake():
     draw_head(x, y)
 
 
-def move():
+def on_time():
     global x, y, snake
     hide_head(x, y)
     if d == 1:
@@ -73,7 +75,7 @@ def move():
 
     window.update()
     if not stop:
-        s.enter(0.2, 1, move)
+        s.enter(0.2, 1, on_time)
     return
 
 
@@ -105,7 +107,7 @@ def main():
     window.bind('<Key>', onkey)
     window.protocol("WM_DELETE_WINDOW", on_closing)
 
-    s.enter(0.2, 1, move)
+    s.enter(0.2, 1, on_time)
     s.run()
 
 
