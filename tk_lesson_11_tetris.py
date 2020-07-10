@@ -127,7 +127,8 @@ class Board:
 
     def copy_figure(self, p, cells, color):
         px, py = p
-        for cx, cy in cells:
+        for cx, cy in\
+                cells:
             self.cells.append((cx + px, cy + py, color))
             self.draw_cell(cx + p[0], cy + p[1], color)
 
