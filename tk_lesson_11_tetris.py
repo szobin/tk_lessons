@@ -15,6 +15,7 @@ BLOCK_4 = [(0, 0), (0, 1), (0, 2), (1, 2)]  # G-left
 BLOCK_5 = [(0, 0), (0, 1), (0, 2), (-1, 2)]  # G-right
 BLOCK_6 = [(0, 0), (0, 1), (0, 2), (1, 2)]  # S-left
 BLOCK_7 = [(0, 0), (0, 1), (0, 2), (-1, 2)]  # S-right
+
 BLOCK_TYPES = [(BLOCK_1, 'blue2'), (BLOCK_2, 'gold2'), (BLOCK_3, 'green2'),
                (BLOCK_4, 'cyan2'), (BLOCK_5, 'cyan2'),
                (BLOCK_6, 'purple2'), (BLOCK_7, 'purple2')]
@@ -127,10 +128,9 @@ class Board:
 
     def copy_figure(self, p, cells, color):
         px, py = p
-        for cx, cy in\
-                cells:
+        for cx, cy in cells:
             self.cells.append((cx + px, cy + py, color))
-            self.draw_cell(cx + p[0], cy + p[1], color)
+            self.draw_cell(cx + px, cy + py, color)
 
     def del_line(self, cy):
         self.cells = list(filter(lambda c: c[1] != cy, self.cells))
@@ -145,16 +145,16 @@ class Board:
             #     lines[cy] = lines[cy] + [cx]
             # else:
             #     lines[cy] = [cx]
-            lines[cy] = lines[cy] + [cx] if cy in lines else [cx]
+            lines[cy] = lines[cy] + 1 if cy in lines else 1
                 
         for cy in lines:
-            if len(lines[cy]) == N_COLS:  # line full
+            if lines[cy] >= N_COLS:  # line full
                 return cy
         return -1
 
     def in_cells(self, cx, cy):
         for c in self.cells:
-            if (c[0] == cx) and (c[1] == cy):
+            if c == (cx, cy):
                 return True
         return False
 

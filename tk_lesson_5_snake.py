@@ -19,7 +19,7 @@ PX = PY = 4
 CELLS_X = 30
 CELLS_Y = 20
 SCORE_HEIGHT = 40
-wx = wy = 20
+wx = wy = 24
 
 W = wx*CELLS_X + 2*MX + 2*PX
 H = wy*CELLS_Y + 2*MY + 3*PY + SCORE_HEIGHT
@@ -30,7 +30,7 @@ y = CELLS_Y // 2
 d = 1
 
 stop = False
-snake = []
+cells = []
 food = []
 snake_len = INI_SNAKE_LEN
 
@@ -115,8 +115,8 @@ def hide_rect(xx, yy):
 
 
 def draw_snake():
-    global snake
-    snake = [(x, y)]
+    global cells
+    cells = [(x, y)]
     draw_head(x, y)
 
 
@@ -128,15 +128,15 @@ def in_food(xx, yy):
 
 
 def in_snake(xx, yy):
-    for i, p in enumerate(snake):
+    for i, p in enumerate(cells):
         if p[0] == xx and p[1] == yy:
             return True
     return False
 
 
 def reset_game():
-    global snake, food, snake_len
-    snake = []
+    global cells, food, snake_len
+    cells = []
     food = []
     snake_len = INI_SNAKE_LEN
 
@@ -147,8 +147,8 @@ def reset_game():
     draw_snake()
 
 
-def move():
-    global x, y, snake, food, snake_len, stop
+def on_time():
+    global x, y, cells, food, snake_len, stop
     hide_head(x, y)
     if d == 1:
         y = y - 1 if y-1 >= 0 else y - 1 + CELLS_Y
@@ -172,22 +172,22 @@ def move():
 
         # to continue game
         reset_game()
-        s.enter(0.2, 1, move)
+        s.enter(0.2, 1, on_time)
         s.run()
         return
 
-    snake.append((x, y))
+    cells.append((x, y))
     draw_head(x, y)
-    if len(snake) > snake_len:
-        x0, y0 = snake[0]
-        del snake[0]
+    if len(cells) > snake_len:
+        x0, y0 = cells[0]
+        del cells[0]
         hide_rect(x0, y0)
-        x0, y0 = snake[0]
+        x0, y0 = cells[0]
         hide_head(x0, y0)
 
     window.update()
     if not stop:
-        s.enter(0.2, 1, move)
+        s.enter(0.2, 1, on_time)
     return
 
 
@@ -221,13 +221,14 @@ def main():
     window.bind('<Key>', onkey)
     window.protocol("WM_DELETE_WINDOW", on_closing)
 
-    add_random_food()
+    for _ in range(5):
+        add_random_food()
     draw_board()
     draw_pane()
     draw_food()
     draw_snake()
 
-    s.enter(0.2, 1, move)
+    s.enter(0.2, 1, on_time)
     s.run()
 
 

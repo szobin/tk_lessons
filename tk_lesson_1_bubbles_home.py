@@ -1,5 +1,5 @@
 # lesson 1a: bubbles
-#   home task: add drawing arcs and rectangles
+#   home task: 1) add drawing arcs and rectangles
 #
 
 from tkinter import Tk, Canvas
@@ -18,17 +18,18 @@ canvas.pack()
 
 def draw_elem():
     color = choice(colors)
-    el_type = choice([1, 2, 2, 2])
-    w = randint(1, int(size/5))
-    h = randint(1, int(size/7))
-    x0 = randint(1, size-w)
-    y0 = randint(1, size-h)
+    el_type = choice([1, 2, 2, 3])
+    d = randint(2, size//6)
+    g = d // 5
+    # h = randint(1, int(size/7))
+    x0 = randint(1, size-d)
+    y0 = randint(g * 30, (g + 1) * 30)
     if el_type == 1:
-        canvas.create_rectangle(x0, y0, x0+w, y0+h, fill=color)
+        canvas.create_rectangle(x0, y0, x0+d, y0+d, fill=color)
     if el_type == 2:
-        canvas.create_oval(x0, y0, x0+w, y0+h, fill=color)
+        canvas.create_oval(x0, y0, x0+d, y0+d, fill=color)
     if el_type == 3:
-        canvas.create_arc(x0, y0, x0+w, y0+h, fill=color)
+        canvas.create_arc(x0, y0, x0+d, y0+d, fill=color)
 
     root.update()
     s.enter(0.1, 1, draw_elem)
@@ -38,7 +39,7 @@ def main():
     try:
         s.enter(0.1, 1, draw_elem)
         s.run()
-        root.mainloop()
+        # root.mainloop()
     except Exception as exc:
         print(repr(exc))
         root.quit()

@@ -61,7 +61,7 @@ class Board:
         xx = get_x(cx)
         yy = get_y(cy)
         self.canvas.create_rectangle(xx, yy, xx+CW, yy+CH,
-                                     fill=color, outline="black", tag="cells{}x{}".format(cx, cy))
+                                     fill=color, outline="black", tag=f"cells{cx}x{cy}")
 
     def draw(self):
         self.canvas.create_rectangle(MX, MY,
@@ -79,7 +79,7 @@ class Board:
     def reset_game(self):
         while len(self.cells) > 0:
             cx, cy, color = self.cells[0]
-            self.canvas.delete("cells{}x{}".format(cx, cy))
+            self.canvas.delete(f"cells{cx}x{cy}")
             del self.cells[0]
 
     def in_cells(self, px, py):
@@ -94,9 +94,9 @@ class Figure:
     cells = None
     p = (0, 0)
 
-    def __init__(self, canvas, board):
+    def __init__(self, canvas, board_):
         self.canvas = canvas
-        self.board = board
+        self.board = board_
         self.respawn()
 
     def respawn(self):
@@ -170,8 +170,9 @@ c = tk.Canvas(window,
               height=CELLS_Y*CH + 2*MY + PY,
               bg='white')
 c.pack()
-b = Board(c)
-figure = Figure(c, b)
+
+board = Board(c)
+figure = Figure(c, board)
 
 
 def on_key(event):
@@ -215,7 +216,7 @@ def show_game_over(canvas):
 
 
 def reset_game():
-    b.reset_game()
+    board.reset_game()
     figure.respawn()
 
 
@@ -224,7 +225,7 @@ def move():
         return
 
     if not figure.down():
-        b.copy_figure(figure.p, figure.cells, figure.color)
+        board.copy_figure(figure.p, figure.cells, figure.color)
         if not figure.respawn():
             show_game_over(c)
             reset_game()
@@ -245,7 +246,7 @@ def main():
     window.bind('<Key>', on_key)
     window.protocol("WM_DELETE_WINDOW", on_close)
 
-    b.draw()
+    board.draw()
     figure.respawn()
 
     s.enter(TIME_VEL, 1, move)

@@ -1,5 +1,5 @@
-# lesson 3: snake game:
-#   - snake moving
+# lesson 3: cells game:
+#   - cells moving
 #   - change moving direction by keys
 
 import sched
@@ -22,7 +22,7 @@ x = CELLS_X // 2
 y = CELLS_Y // 2
 d = 1
 stop = False
-snake = []
+cells = []
 
 canvas = tk.Canvas(window, width=CELLS_X*wx+2*BOARD_X, height=CELLS_Y*wy+2*BOARD_Y+SCORE_HEIGHT, bg='white')
 canvas.pack()
@@ -47,13 +47,13 @@ def hide_rect(xx, yy):
 
 
 def draw_snake():
-    global snake
-    snake = [(x, y)]
+    global cells
+    cells = [(x, y)]
     draw_head(x, y)
 
 
 def on_time():
-    global x, y, snake
+    global x, y, cells
     hide_head(x, y)
     if d == 1:
         y = y - wy if y-wy > 0 else y - 2*wy + CELLS_Y*wy
@@ -64,13 +64,13 @@ def on_time():
     elif d == 4:
         x = (x + wx) % (CELLS_X*wx - wx)
 
-    snake.append((x, y))
+    cells.append((x, y))
     draw_head(x, y)
-    if len(snake) > SNAKE_LEN:
-        x0, y0 = snake[0]
-        del snake[0]
+    if len(cells) > SNAKE_LEN:
+        x0, y0 = cells[0]
+        del cells[0]
         hide_rect(x0, y0)
-        x0, y0 = snake[0]
+        x0, y0 = cells[0]
         hide_head(x0, y0)
 
     window.update()
@@ -79,7 +79,7 @@ def on_time():
     return
 
 
-def onkey(event):
+def on_key(event):
     global stop
     if event.keysym == 'Escape':
         stop = True
@@ -104,7 +104,7 @@ def on_closing():
 
 def main():
     draw_snake()
-    window.bind('<Key>', onkey)
+    window.bind('<Key>', on_key)
     window.protocol("WM_DELETE_WINDOW", on_closing)
 
     s.enter(0.2, 1, on_time)

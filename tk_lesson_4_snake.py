@@ -24,7 +24,7 @@ x = CELLS_X // 2
 y = CELLS_Y // 2
 d = 1
 stop = False
-snake = []
+cells = []
 food = []
 
 canvas = tk.Canvas(window, width=CELLS_X*wx+2*BOARD_X, height=CELLS_Y*wy+2*BOARD_Y+SCORE_HEIGHT, bg='white')
@@ -86,8 +86,8 @@ def hide_rect(xx, yy):
 
 
 def draw_snake():
-    global snake
-    snake = [(x, y)]
+    global cells
+    cells = [(x, y)]
     draw_head(x, y)
 
 
@@ -99,14 +99,14 @@ def in_food(xx, yy):
 
 
 def in_snake(xx, yy):
-    for i, p in enumerate(snake):
+    for i, p in enumerate(cells):
         if p[0] == xx and p[1] == yy:
             return True
     return False
 
 
-def move():
-    global x, y, snake, food, SNAKE_LEN, stop
+def on_time():
+    global x, y, cells, food, SNAKE_LEN, stop
     hide_head(x, y)
     if d == 1:
         y = y - 1 if y-1 >= 0 else y - 1 + CELLS_Y
@@ -125,18 +125,18 @@ def move():
         draw_food()
         draw_pane()
 
-    snake.append((x, y))
+    cells.append((x, y))
     draw_head(x, y)
-    if len(snake) > SNAKE_LEN:
-        x0, y0 = snake[0]
-        del snake[0]
+    if len(cells) > SNAKE_LEN:
+        x0, y0 = cells[0]
+        del cells[0]
         hide_rect(x0, y0)
-        x0, y0 = snake[0]
+        x0, y0 = cells[0]
         hide_head(x0, y0)
 
     window.update()
     if not stop:
-        s.enter(0.2, 1, move)
+        s.enter(0.2, 1, on_time)
     return
 
 
@@ -175,7 +175,7 @@ def main():
     draw_food()
     draw_snake()
 
-    s.enter(0.2, 1, move)
+    s.enter(0.2, 1, on_time)
     s.run()
 
 

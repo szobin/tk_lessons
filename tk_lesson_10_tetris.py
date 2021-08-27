@@ -76,15 +76,7 @@ def rotate_cells(cells):
     return cells_r
 
 
-class BoardCell:
-
-    def __init__(self, x, y, color):
-        self.x = x
-        self.y = y
-        self.color = color
-
-
-class BoardMap:
+class Board:
 
     def __init__(self, nx=CELLS_X, ny=CELLS_Y):
         self.nx = nx
@@ -142,7 +134,7 @@ class BoardMap:
         return False
 
 
-board = BoardMap()
+board = Board()
 
 
 class Figure:

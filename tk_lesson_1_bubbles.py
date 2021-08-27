@@ -11,9 +11,10 @@ COLORS = ['aqua', 'blue', 'fuchsia', 'green', 'maroon', 'orange', 'pink',
           'purple', 'red', 'yellow', 'violet', 'indigo', 'chartreuse',
           'lime', '#f55c4b']
 
-root = tk.Tk()
-canvas = tk.Canvas(root, width=SIZE, height=SIZE)
+window = tk.Tk()
+canvas = tk.Canvas(window, width=SIZE, height=SIZE)
 canvas.pack()
+# window.mainloop()
 
 try:
     while True:
@@ -22,8 +23,8 @@ try:
         xc = rm.randint(0, SIZE)
         yc = rm.randint(0, SIZE)
         canvas.create_oval(xc, yc, xc+d, yc+d, fill=color)
-        root.update()
+        window.update()
         tm.sleep(0.1)
 except Exception as exc:
     print(repr(exc))
-    root.quit()
+    window.quit()
