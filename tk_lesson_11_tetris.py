@@ -266,29 +266,11 @@ class App:
         y = 5  # (screen_height // 2) - (h // 2) - 20
         self.root.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
-    def on_key(self, event):
-        # to prevent move figure in game-over mode
-        if self.stop:
-            return
-
-        if event.keysym == 'Escape':
-            self.stop = True
-            return
-
-        elif event.keysym == 'Left':
-            self.figure.shift(-1)
-        elif event.keysym == 'Right':
-            self.figure.shift(1)
-        elif event.keysym == 'Up':
-            self.figure.rotate()
-        elif event.keysym == 'Down':
-            self.drop()
-
-    def on_close(self):
-        if self.stop:
-            self.root.quit()
-        self.stop = True
-        self.restart_var.set(1)
+    def drop_figure(self):
+        while self.figure.down():
+            self.root.update()
+            tm.sleep(0.1)
+        return
 
     def game_over(self):
         x = W_CANVAS / 2
@@ -309,6 +291,34 @@ class App:
         restart_button.wait_variable(self.restart_var)
         restart_button.destroy()
         self.canvas.delete("game")
+
+    def reset_game(self): 
+        self.board.reset()
+        self.board.draw()
+
+    def on_key(self, event):
+        # to prevent move figure in game-over mode
+        if self.stop:
+            return
+
+        if event.keysym == 'Escape':
+            self.stop = True
+            return
+
+        elif event.keysym == 'Left':
+            self.figure.shift(-1)
+        elif event.keysym == 'Right':
+            self.figure.shift(1)
+        elif event.keysym == 'Up':
+            self.figure.rotate()
+        elif event.keysym == 'Down':
+            self.drop_figure()
+
+    def on_close(self):
+        if self.stop:
+            self.root.quit()
+        self.stop = True
+        self.restart_var.set(1)
 
     def on_time(self):
 
@@ -332,18 +342,11 @@ class App:
                 self.game_over()
 
                 # to continue game
-                self.board.reset()
-                self.board.draw()
+                self.reset_game()
             self.board.add_score(1)
             self.figure.show()
         self.root.update()
         self.s.enter(self.board.get_interval(), 1, self.on_time)
-        return
-
-    def drop(self):
-        while self.figure.down():
-            self.root.update()
-            tm.sleep(0.1)
         return
 
     def run(self):

@@ -203,14 +203,14 @@ def on_close():
     stop = True
 
 
-def move():
+def on_time():
     if not f.down():
         board.add_figure(f.p, f.cells, f.color)
         new_figure()
 
     root.update()
     if not stop:
-        s.enter(TIME_VEL, 1, move)
+        s.enter(TIME_VEL, 1, on_time)
     return
 
 
@@ -222,7 +222,7 @@ def main():
 
     # f.down()
 
-    s.enter(TIME_VEL, 1, move)
+    s.enter(TIME_VEL, 1, on_time)
     s.run()
 
 

@@ -6,74 +6,67 @@ import sched
 import time
 import tkinter as tk
 
+MX = MY = 5
+NX, NY = 30, 20
+CW = CH = 20
+SCORE_HEIGHT = 40
+W = 2*MX + NX*CW
+H = 2*MY + NY*CH
+snake_len = 4
+
+x, y = NX // 2, NY // 2
+d = 1
+stop = False
+cells = []
+
 window = tk.Tk()
 window.title("Snake")
 
 s = sched.scheduler(time.time, time.sleep)
 
-BOARD_X = BOARD_Y = 5
-CELLS_X = 30
-CELLS_Y = 20
-SCORE_HEIGHT = 40
-wx = wy = 20
-
-SNAKE_LEN = 4
-x = CELLS_X // 2
-y = CELLS_Y // 2
-d = 1
-stop = False
-cells = []
-
-canvas = tk.Canvas(window, width=CELLS_X*wx+2*BOARD_X, height=CELLS_Y*wy+2*BOARD_Y+SCORE_HEIGHT, bg='white')
+canvas = tk.Canvas(window, width=W, height=H+SCORE_HEIGHT, bg='white')
 canvas.pack()
 
 
 def draw_board():
-    canvas.create_rectangle(BOARD_X, BOARD_Y,
-                            BOARD_X + CELLS_X*wx,
-                            BOARD_Y + CELLS_X*wy, fill="white")
+    canvas.create_rectangle(MX, MY, MX + CW*NX, MY + CH*NY, fill="white")
 
 
-def draw_head(xx, yy):
-    canvas.create_rectangle(xx, yy, xx + wx, yy + wy, fill="green")
+def draw_head():
+    canvas.create_rectangle(x, y, x + CW, y + CH, fill="green", tag="head")
 
 
-def hide_head(xx, yy):
-    canvas.create_rectangle(xx, yy, xx + wx, yy + wy, fill="white")
+def hide_head():
+    canvas.delete("head")
 
 
-def hide_rect(xx, yy):
-    canvas.create_rectangle(xx, yy, xx + wx, yy + wy, fill="white", outline="white")
+def draw_cell():
+    cells.append((x, y))
+    canvas.create_rectangle(x, y, x + CW, y + CH, fill="gray", tag=f'cell{x}x{y}')
 
 
-def draw_snake():
-    global cells
-    cells = [(x, y)]
-    draw_head(x, y)
+def hide_cell():
+    xx, yy = cells[0]
+    del cells[0]
+    canvas.delete(f'cell{xx}x{yy}')
 
 
 def on_time():
-    global x, y, cells
-    hide_head(x, y)
-    if d == 1:
-        y = y - wy if y-wy > 0 else y - 2*wy + CELLS_Y*wy
-    elif d == 2:
-        y = (y + wy) % (CELLS_Y*wy - wy)
-    elif d == 3:
-        x = x - wx if x - wx > 0 else x - 2 * wx + CELLS_X*wx
-    elif d == 4:
-        x = (x + wx) % (CELLS_X*wx - wx)
+    global x, y
+    d_dict = {1: lambda xx, yy: (xx, yy - CH if yy-CH > 0 else yy - 2*CH + NY*CH),
+              2: lambda xx, yy: (xx, (yy + CH) % (NY*CH - CH)),
+              3: lambda xx, yy: (xx - CW if xx - CW > 0 else xx - 2 * CW + NX*CW, yy),
+              4: lambda xx, yy: ((xx + CW) % (NX*CW - CW), yy)}
+    if d in d_dict:
+        hide_head()
+        draw_cell()
+        x, y = d_dict[d](x, y)
 
-    cells.append((x, y))
-    draw_head(x, y)
-    if len(cells) > SNAKE_LEN:
-        x0, y0 = cells[0]
-        del cells[0]
-        hide_rect(x0, y0)
-        x0, y0 = cells[0]
-        hide_head(x0, y0)
+        draw_head()
+        if len(cells) > snake_len:
+            hide_cell()
 
-    window.update()
+        window.update()
     if not stop:
         s.enter(0.2, 1, on_time)
     return
@@ -85,15 +78,11 @@ def on_key(event):
         stop = True
         return
 
+    d_dict = {'Up': 1, 'Down': 2, 'Left': 3, 'Right': 4}
+
     global d
-    if event.keysym == 'Up':
-        d = 1
-    elif event.keysym == 'Down':
-        d = 2
-    elif event.keysym == 'Left':
-        d = 3
-    elif event.keysym == 'Right':
-        d = 4
+    if event.keysym in d_dict:
+        d = d_dict[event.keysym]
     return
 
 
@@ -103,9 +92,10 @@ def on_closing():
 
 
 def main():
-    draw_snake()
     window.bind('<Key>', on_key)
     window.protocol("WM_DELETE_WINDOW", on_closing)
+
+    draw_head()
 
     s.enter(0.2, 1, on_time)
     s.run()

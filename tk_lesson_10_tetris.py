@@ -253,7 +253,7 @@ def show_game_over():
     restart_button.destroy()
 
 
-def move():
+def on_time():
     global stop
 
     if stop:
@@ -278,7 +278,7 @@ def move():
             return
 
     root.update()
-    s.enter(TIME_VEL, 1, move)
+    s.enter(TIME_VEL, 1, on_time)
     return
 
 
@@ -297,7 +297,7 @@ def main():
 
     # f.down()
 
-    s.enter(TIME_VEL, 1, move)
+    s.enter(TIME_VEL, 1, on_time)
     s.run()
 
 

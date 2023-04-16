@@ -220,7 +220,7 @@ def reset_game():
     figure.respawn()
 
 
-def move():
+def on_time():
     if stop:
         return
 
@@ -231,7 +231,7 @@ def move():
             reset_game()
 
     window.update()
-    s.enter(TIME_VEL, 1, move)
+    s.enter(TIME_VEL, 1, on_time)
     return
 
 
@@ -249,7 +249,7 @@ def main():
     board.draw()
     figure.respawn()
 
-    s.enter(TIME_VEL, 1, move)
+    s.enter(TIME_VEL, 1, on_time)
     s.run()
 
 
